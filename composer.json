@@ -1,0 +1,11 @@
+{
+    "name": "zborovo-sk/zbf-migrations",
+    "description": "Simple PHP tool for database migrations.",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "ZborovoSK\\ZBFMigrations\\": "src/"
+        }
+    },
+    "require": {}
+}
