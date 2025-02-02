@@ -24,6 +24,10 @@ class Migrator
     public function __construct(PDO $pdo, string $migrationsTable = 'migrations', string $migrationsDir = 'migrations')
     {
         $this->pdo = $pdo;
+
+        //we set error mode to exception
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
         $this->setMigrationsTable($migrationsTable);
         $this->setMigrationsDir($migrationsDir);
     }
