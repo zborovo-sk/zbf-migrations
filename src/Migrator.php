@@ -13,6 +13,8 @@ class Migrator
 
     private string $migrationsDir = 'migrations';
 
+    private string $tablePrefix = '';
+
     protected PDO $pdo;
 
     /**
@@ -21,7 +23,7 @@ class Migrator
      * @param string $migrationsTable
      * @param string $migrationsDir
      */
-    public function __construct(PDO $pdo, string $migrationsTable = 'migrations', string $migrationsDir = 'migrations')
+    public function __construct(PDO $pdo, string $migrationsTable = 'migrations', string $migrationsDir = 'migrations', string $tablePrefix ='')
     {
         $this->pdo = $pdo;
 
@@ -30,6 +32,7 @@ class Migrator
 
         $this->setMigrationsTable($migrationsTable);
         $this->setMigrationsDir($migrationsDir);
+        $this->setTablePrefix($tablePrefix);
     }
 
     /**
@@ -50,6 +53,16 @@ class Migrator
     public function setMigrationsDir(string $migrationsDir): void
     {
         $this->migrationsDir = $migrationsDir;
+    }
+
+    /**
+     * Set table prefix
+     * @param string $tablePrefix
+     * @return void
+     */
+    public function setTablePrefix(string $tablePrefix): void
+    {
+        $this->migrationsTable = $tablePrefix.$this->migrationsTable;
     }
 
     /**
@@ -208,6 +221,9 @@ class Migrator
                 $this->pdo->beginTransaction();
 
                 $content = file_get_contents($this->migrationsDir.'/'.$file);
+
+                //we replace eventual {tablePrefix} with the actual table prefix
+                $content = str_replace('{tablePrefix}', $this->tablePrefix, $content);
 
                 $queries = explode(';', $content);
 
